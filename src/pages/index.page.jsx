@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { fetchLists } from '~/store/list/index'
 
 const Home = () => {
   const dispatch = useDispatch()
-  const history = useHistory()
+  const navigate = useNavigate()
 
   const currentListId = useSelector(state => state.list.current)
 
@@ -15,7 +15,7 @@ const Home = () => {
 
   useEffect(() => {
     if (currentListId) {
-      history.push(`/lists/${currentListId}`)
+      navigate(`/lists/${currentListId}`)
     }
   }, [currentListId])
 

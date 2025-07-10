@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react'
-import { Redirect, Link } from 'react-router-dom'
+import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
-import './index.css'
-import { useSignup } from '~/hooks/useSignup'
+import { Link, Navigate } from 'react-router-dom'
 import { useId } from '~/hooks/useId'
+import { useSignup } from '~/hooks/useSignup'
+import './index.css'
 
 const SignUp = () => {
   const auth = useSelector(state => state.auth.token !== null)
@@ -36,7 +36,7 @@ const SignUp = () => {
   )
 
   if (auth) {
-    return <Redirect to="/" />
+    return <Navigate to="/" />
   }
 
   return (

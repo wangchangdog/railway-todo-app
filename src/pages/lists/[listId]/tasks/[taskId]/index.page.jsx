@@ -1,17 +1,17 @@
-import { useCallback, useState, useEffect } from 'react'
-import { Link, useHistory, useParams } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
+import { useCallback, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { BackButton } from '~/components/BackButton'
-import './index.css'
-import { setCurrentList } from '~/store/list'
-import { fetchTasks, updateTask, deleteTask } from '~/store/task'
 import { useId } from '~/hooks/useId'
+import { setCurrentList } from '~/store/list'
+import { deleteTask, fetchTasks, updateTask } from '~/store/task'
+import './index.css'
 
 const EditTask = () => {
   const id = useId()
 
   const { listId, taskId } = useParams()
-  const history = useHistory()
+  const navigate = useNavigate()
   const dispatch = useDispatch()
 
   const [title, setTitle] = useState('')
@@ -47,7 +47,7 @@ const EditTask = () => {
       void dispatch(updateTask({ id: taskId, title, detail, done }))
         .unwrap()
         .then(() => {
-          history.push(`/lists/${listId}`)
+          navigate(`/lists/${listId}`)
         })
         .catch(err => {
           setErrorMessage(err.message)
@@ -69,7 +69,7 @@ const EditTask = () => {
     void dispatch(deleteTask({ id: taskId }))
       .unwrap()
       .then(() => {
-        history.push(`/`)
+        navigate(`/`)
       })
       .catch(err => {
         setErrorMessage(err.message)
