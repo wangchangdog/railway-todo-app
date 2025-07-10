@@ -1,4 +1,4 @@
-import { ChevronIcon } from '~/icons/ChevronIcon'
+import { ChevronIcon } from '@/icons/ChevronIcon'
 import './BackButton.css'
 
 const handleClick = () => {

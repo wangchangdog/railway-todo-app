@@ -1,11 +1,11 @@
-import { ListIcon } from '~/icons/ListIcon'
-import './Sidebar.css'
-import { Link, useLocation } from 'react-router-dom'
-import { PlusIcon } from '~/icons/PlusIcon'
-import { useSelector, useDispatch } from 'react-redux'
-import { useLogout } from '~/hooks/useLogout'
+import { useLogout } from '@/hooks/useLogout'
+import { ListIcon } from '@/icons/ListIcon'
+import { PlusIcon } from '@/icons/PlusIcon'
+import { fetchLists } from '@/store/list/index'
 import { useEffect } from 'react'
-import { fetchLists } from '~/store/list/index'
+import { useDispatch, useSelector } from 'react-redux'
+import { Link, useLocation } from 'react-router-dom'
+import './Sidebar.css'
 
 export const Sidebar = () => {
   const dispatch = useDispatch()

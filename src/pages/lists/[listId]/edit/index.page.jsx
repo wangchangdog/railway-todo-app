@@ -1,9 +1,9 @@
+import { BackButton } from '@/components/BackButton'
+import { useId } from '@/hooks/useId'
+import { deleteList, fetchLists, updateList } from '@/store/list'
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { BackButton } from '~/components/BackButton'
-import { useId } from '~/hooks/useId'
-import { deleteList, fetchLists, updateList } from '~/store/list'
 import './index.css'
 
 const EditList = () => {

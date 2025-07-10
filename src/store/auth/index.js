@@ -1,8 +1,8 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from '~/vendor/axios'
-import { handleThunkError } from '~/utils/handleThunkError'
-import { resetTask } from '~/store/task'
-import { resetList } from '~/store/list'
+import { resetList } from '@/store/list'
+import { resetTask } from '@/store/task'
+import { handleThunkError } from '@/utils/handleThunkError'
+import axios from '@/vendor/axios'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   // NOTE: localStorageから直接取得している。SSR時にはこのままでは動かないので注意

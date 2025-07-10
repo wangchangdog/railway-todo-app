@@ -1,7 +1,7 @@
+import { logout } from '@/store/auth'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { logout } from '~/store/auth'
 
 export const useLogout = () => {
   const dispatch = useDispatch()

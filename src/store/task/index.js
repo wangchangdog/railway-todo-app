@@ -1,6 +1,6 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { handleThunkError } from '~/utils/handleThunkError'
-import axios from '~/vendor/axios'
+import { handleThunkError } from '@/utils/handleThunkError'
+import axios from '@/vendor/axios'
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   tasks: null,

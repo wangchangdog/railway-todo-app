@@ -1,8 +1,8 @@
-import { useCallback, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { Link, Navigate } from 'react-router-dom'
-import { useId } from '~/hooks/useId'
-import { useSignup } from '~/hooks/useSignup'
+import {useId} from '@/hooks/useId'
+import {useSignup} from '@/hooks/useSignup'
+import {useCallback, useState} from 'react'
+import {useSelector} from 'react-redux'
+import {Link, Navigate} from 'react-router-dom'
 import './index.css'
 
 const SignUp = () => {

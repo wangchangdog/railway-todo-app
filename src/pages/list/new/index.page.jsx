@@ -1,9 +1,9 @@
+import { BackButton } from '@/components/BackButton'
+import { useId } from '@/hooks/useId'
+import { createList, setCurrentList } from '@/store/list/index'
 import { useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { BackButton } from '~/components/BackButton'
-import { useId } from '~/hooks/useId'
-import { createList, setCurrentList } from '~/store/list/index'
 import './index.css'
 
 const NewList = () => {

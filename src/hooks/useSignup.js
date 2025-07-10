@@ -1,7 +1,7 @@
+import { signup } from '@/store/auth'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { signup } from '~/store/auth'
 
 export const useSignup = () => {
   const dispatch = useDispatch()

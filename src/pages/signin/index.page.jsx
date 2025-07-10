@@ -1,8 +1,8 @@
+import {useId} from '@/hooks/useId'
+import {useLogin} from '@/hooks/useLogin'
 import {useCallback, useState} from 'react'
 import {useSelector} from 'react-redux'
 import {Link, Navigate} from 'react-router-dom'
-import {useId} from '~/hooks/useId'
-import {useLogin} from '~/hooks/useLogin'
 import './index.css'
 
 const SignIn = () => {

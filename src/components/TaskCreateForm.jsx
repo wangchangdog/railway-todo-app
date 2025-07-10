@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState, useRef } from 'react'
+import { CheckIcon } from '@/icons/CheckIcon'
+import { createTask } from '@/store/task'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import './TaskCreateForm.css'
-import { CheckIcon } from '~/icons/CheckIcon'
-import { createTask } from '~/store/task'
 
 export const TaskCreateForm = () => {
   const dispatch = useDispatch()
