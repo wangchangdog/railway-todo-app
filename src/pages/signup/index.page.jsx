@@ -1,105 +1,101 @@
-import {useId} from '@/hooks/useId'
-import {useSignup} from '@/hooks/useSignup'
-import {useCallback, useState} from 'react'
-import {useSelector} from 'react-redux'
-import {Link, Navigate} from 'react-router-dom'
-import './index.css'
+import { useId } from '@/hooks/useId';
+import { useSignup } from '@/hooks/useSignup';
+import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, Navigate } from 'react-router-dom';
+import './index.css';
 
 const SignUp = () => {
-  const auth = useSelector(state => state.auth.token !== null)
+  const auth = useSelector((state) => state.auth.token !== null);
 
-  const id = useId()
-  const [errorMessage, setErrorMessage] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const id = useId();
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [email, setEmail] = useState('')
-  const [name, setName] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [name, setName] = useState('');
+  const [password, setPassword] = useState('');
 
-  const { signup } = useSignup()
+  const { signup } = useSignup();
 
   const onSubmit = useCallback(
-    event => {
-      event.preventDefault()
+    (event) => {
+      event.preventDefault();
 
-      setIsSubmitting(true)
+      setIsSubmitting(true);
 
       signup({ email, name, password })
-        .catch(err => {
-          setErrorMessage(`サインアップに失敗しました: ${err.message}`)
+        .catch((err) => {
+          setErrorMessage(`サインアップに失敗しました: ${err.message}`);
         })
         .finally(() => {
-          setIsSubmitting(false)
-        })
+          setIsSubmitting(false);
+        });
     },
-    [email, name, password],
-  )
+    [email, name, password]
+  );
 
   if (auth) {
-    return <Navigate to="/" />
+    return <Navigate to='/' />;
   }
 
   return (
-    <main className="signup">
-      <h2 className="signup__title">Register</h2>
-      <p className="signup__error">{errorMessage}</p>
-      <form className="signup__form" onSubmit={onSubmit}>
-        <fieldset className="signup__form_field">
-          <label htmlFor={`${id}-email`} className="signup__form_label">
+    <main className='signup'>
+      <h2 className='signup__title'>Register</h2>
+      <p className='signup__error'>{errorMessage}</p>
+      <form className='signup__form' onSubmit={onSubmit}>
+        <fieldset className='signup__form_field'>
+          <label htmlFor={`${id}-email`} className='signup__form_label'>
             E-mail Address
           </label>
           <input
             id={`${id}-email`}
-            autoComplete="email"
-            className="app_input"
+            autoComplete='email'
+            className='app_input'
             value={email}
-            onChange={event => setEmail(event.target.value)}
+            onChange={(event) => setEmail(event.target.value)}
           />
         </fieldset>
-        <fieldset className="signup__form_field">
-          <label
-            htmlFor={`${id}-name`}
-            autoComplete="name"
-            className="signup__form_label"
-          >
+        <fieldset className='signup__form_field'>
+          <label htmlFor={`${id}-name`} autoComplete='name' className='signup__form_label'>
             Name
           </label>
           <input
             id={`${id}-name`}
-            type="text"
-            className="app_input"
+            type='text'
+            className='app_input'
             value={name}
-            onChange={event => setName(event.target.value)}
+            onChange={(event) => setName(event.target.value)}
           />
         </fieldset>
-        <fieldset className="signup__form_field">
+        <fieldset className='signup__form_field'>
           <label
             htmlFor={`${id}-password`}
-            autoComplete="new-password"
-            className="signup__form_label"
+            autoComplete='new-password'
+            className='signup__form_label'
           >
             Password
           </label>
           <input
             id={`${id}-password`}
-            type="password"
-            className="app_input"
+            type='password'
+            className='app_input'
             value={password}
-            onChange={event => setPassword(event.target.value)}
+            onChange={(event) => setPassword(event.target.value)}
           />
         </fieldset>
-        <div className="signup__form_actions">
-          <Link className="app_button" data-variant="secondary" to="/signin">
+        <div className='signup__form_actions'>
+          <Link className='app_button' data-variant='secondary' to='/signin'>
             Login
           </Link>
-          <div className="signup__form_actions_spacer"></div>
-          <button type="submit" className="app_button" disabled={isSubmitting}>
+          <div className='signup__form_actions_spacer'></div>
+          <button type='submit' className='app_button' disabled={isSubmitting}>
             Register
           </button>
         </div>
       </form>
     </main>
-  )
-}
+  );
+};
 
-export default SignUp
+export default SignUp;

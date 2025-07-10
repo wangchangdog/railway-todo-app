@@ -1,127 +1,114 @@
-import { CheckIcon } from '@/icons/CheckIcon'
-import { createTask } from '@/store/task'
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import './TaskCreateForm.css'
+import { CheckIcon } from '@/icons/CheckIcon';
+import { createTask } from '@/store/task';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import './TaskCreateForm.css';
 
 export const TaskCreateForm = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const refForm = useRef(null)
-  const [elemTextarea, setElemTextarea] = useState(null)
+  const refForm = useRef(null);
+  const [elemTextarea, setElemTextarea] = useState(null);
 
-  const [formState, setFormState] = useState('initial')
+  const [formState, setFormState] = useState('initial');
 
-  const [title, setTitle] = useState('')
-  const [detail, setDetail] = useState('')
-  const [done, setDone] = useState(false)
+  const [title, setTitle] = useState('');
+  const [detail, setDetail] = useState('');
+  const [done, setDone] = useState(false);
 
   const handleToggle = useCallback(() => {
-    setDone(prev => !prev)
-  }, [])
+    setDone((prev) => !prev);
+  }, []);
 
   const handleFocus = useCallback(() => {
-    setFormState('focused')
-  }, [])
+    setFormState('focused');
+  }, []);
 
   const handleBlur = useCallback(() => {
     if (title || detail) {
-      return
+      return;
     }
 
     setTimeout(() => {
       // フォーム内の要素がフォーカスされている場合は何もしない
-      const formElement = refForm.current
+      const formElement = refForm.current;
       if (formElement && formElement.contains(document.activeElement)) {
-        return
+        return;
       }
 
-      setFormState('initial')
-      setDone(false)
-    }, 100)
-  }, [title, detail])
+      setFormState('initial');
+      setDone(false);
+    }, 100);
+  }, [title, detail]);
 
   const handleDiscard = useCallback(() => {
-    setTitle('')
-    setDetail('')
-    setFormState('initial')
-    setDone(false)
-  }, [])
+    setTitle('');
+    setDetail('');
+    setFormState('initial');
+    setDone(false);
+  }, []);
 
   const onSubmit = useCallback(
-    event => {
-      event.preventDefault()
+    (event) => {
+      event.preventDefault();
 
-      setFormState('submitting')
+      setFormState('submitting');
 
       void dispatch(createTask({ title, detail, done }))
         .unwrap()
         .then(() => {
-          handleDiscard()
+          handleDiscard();
         })
-        .catch(err => {
-          alert(err.message)
-          setFormState('focused')
-        })
+        .catch((err) => {
+          alert(err.message);
+          setFormState('focused');
+        });
     },
-    [title, detail, done],
-  )
+    [title, detail, done]
+  );
 
   useEffect(() => {
     if (!elemTextarea) {
-      return
+      return;
     }
 
     const recalcHeight = () => {
-      elemTextarea.style.height = 'auto'
-      elemTextarea.style.height = `${elemTextarea.scrollHeight}px`
-    }
+      elemTextarea.style.height = 'auto';
+      elemTextarea.style.height = `${elemTextarea.scrollHeight}px`;
+    };
 
-    elemTextarea.addEventListener('input', recalcHeight)
-    recalcHeight()
+    elemTextarea.addEventListener('input', recalcHeight);
+    recalcHeight();
 
     return () => {
-      elemTextarea.removeEventListener('input', recalcHeight)
-    }
-  }, [elemTextarea])
+      elemTextarea.removeEventListener('input', recalcHeight);
+    };
+  }, [elemTextarea]);
 
   return (
-    <form
-      ref={refForm}
-      className="task_create_form"
-      onSubmit={onSubmit}
-      data-state={formState}
-    >
-      <div className="task_create_form__title_container">
+    <form ref={refForm} className='task_create_form' onSubmit={onSubmit} data-state={formState}>
+      <div className='task_create_form__title_container'>
         <button
-          type="button"
+          type='button'
           onClick={handleToggle}
-          className="task_create_form__mark_button"
+          className='task_create_form__mark_button'
           onFocus={handleFocus}
           onBlur={handleBlur}
         >
           {done ? (
-            <div
-              className="task_create_form__mark____complete"
-              aria-label="Completed"
-            >
-              <CheckIcon
-                className="task_create_form__mark____complete_check"
-              />
+            <div className='task_create_form__mark____complete' aria-label='Completed'>
+              <CheckIcon className='task_create_form__mark____complete_check' />
             </div>
           ) : (
-            <div
-              className="task_create_form__mark____incomplete"
-              aria-label="Incomplete"
-            ></div>
+            <div className='task_create_form__mark____incomplete' aria-label='Incomplete'></div>
           )}
         </button>
         <input
-          type="text"
-          className="task_create_form__title"
-          placeholder="Add a new task..."
+          type='text'
+          className='task_create_form__title'
+          placeholder='Add a new task...'
           value={title}
-          onChange={e => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           disabled={formState === 'submitting'}
@@ -132,28 +119,28 @@ export const TaskCreateForm = () => {
           <textarea
             ref={setElemTextarea}
             rows={1}
-            className="task_create_form__detail"
-            placeholder="Add a description here..."
+            className='task_create_form__detail'
+            placeholder='Add a description here...'
             value={detail}
-            onChange={e => setDetail(e.target.value)}
+            onChange={(e) => setDetail(e.target.value)}
             onBlur={handleBlur}
             disabled={formState === 'submitting'}
           />
-          <div className="task_create_form__actions">
+          <div className='task_create_form__actions'>
             <button
-              type="button"
-              className="app_button"
-              data-variant="secondary"
+              type='button'
+              className='app_button'
+              data-variant='secondary'
               onBlur={handleBlur}
               onClick={handleDiscard}
               disabled={(!title && !detail) || formState === 'submitting'}
             >
               Discard
             </button>
-            <div className="task_create_form__spacer"></div>
+            <div className='task_create_form__spacer'></div>
             <button
-              type="submit"
-              className="app_button"
+              type='submit'
+              className='app_button'
               onBlur={handleBlur}
               disabled={!title || !detail || formState === 'submitting'}
             >
@@ -163,5 +150,5 @@ export const TaskCreateForm = () => {
         </div>
       )}
     </form>
-  )
-}
+  );
+};
