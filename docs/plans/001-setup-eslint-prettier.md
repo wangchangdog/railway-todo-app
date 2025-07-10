@@ -18,7 +18,6 @@ yarn add -D eslint prettier eslint-config-airbnb eslint-config-prettier eslint-p
 - **eslint-config-airbnb**: Airbnbのスタイルガイドに基づく設定
 - **eslint-config-prettier**: Prettierと競合するESLintルールを無効化
 - **eslint-plugin-import**: ES Moduleのimport/export構文に関するルール
-- **eslint-plugin-jsx-a11y**: JSXのアクセシビリティに関するルール
 - **eslint-plugin-prettier**: PrettierのルールをESLintで実行
 - **eslint-plugin-react**: React固有のルールセット
 - **eslint-plugin-react-hooks**: React Hooksのルール
@@ -41,7 +40,6 @@ module.exports = {
     'plugin:react/recommended',
     'plugin:react/jsx-runtime', // React 17+ の新しいJSX Transformに対応
     'plugin:react-hooks/recommended',
-    'plugin:jsx-a11y/recommended',
     'airbnb',
     'prettier', // prettierは最後に記述
   ],
