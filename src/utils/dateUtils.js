@@ -52,7 +52,7 @@ export const isOverdue = (limitString) => {
 };
 
 export const convertToServerFormat = (dateTimeLocalString) => {
-  if (!dateTimeLocalString) return '';
+  if (!dateTimeLocalString) return null;
   const date = new Date(dateTimeLocalString);
   if (isNaN(date.getTime())) return '';
   // Convert to ISO 8601 UTC string (e.g., "2023-12-12T23:59:59.000Z")
