@@ -8,11 +8,11 @@ export const useSignup = () => {
   const navigate = useNavigate();
 
   const handleSignup = useCallback(
-    async (email, password) => {
-      await dispatch(signup({ email, password })).unwrap();
+    async ({ email, name, password }) => {
+      await dispatch(signup({ email, name, password })).unwrap();
       navigate('/');
     },
-    [useDispatch]
+    [dispatch, navigate]
   );
 
   return {
