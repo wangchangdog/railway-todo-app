@@ -20,7 +20,7 @@ export const TaskItem = ({ task }) => {
     void dispatch(updateTask({ id, done: !done })).finally(() => {
       setIsSubmitting(false);
     });
-  }, [id, done]);
+  }, [id, done, dispatch]);
 
   const timeRemaining = calculateTimeRemaining(limit);
   const formattedLimit = formatDateTimeForDisplay(limit);

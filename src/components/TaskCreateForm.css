@@ -71,7 +71,6 @@
   background: transparent;
   color: var(--slate-500);
   resize: none;
-  height: 0;
   width: 100%;
 }
 

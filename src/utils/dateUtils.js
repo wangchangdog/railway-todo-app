@@ -1,59 +1,41 @@
+import { format, differenceInMinutes, differenceInHours, differenceInDays, isPast } from 'date-fns';
+
 export const formatDateTimeForInput = (dateString) => {
   if (!dateString) return '';
-
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return '';
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  return format(new Date(dateString), "yyyy-MM-dd'T'HH:mm");
 };
 
 export const formatDateTimeForDisplay = (dateString) => {
   if (!dateString) return '';
-
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return '';
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
+  return format(new Date(dateString), 'yyyy/MM/dd HH:mm');
 };
 
 export const calculateTimeRemaining = (limitString) => {
   if (!limitString) return null;
-
   const limitDate = new Date(limitString);
   if (isNaN(limitDate.getTime())) return null;
 
-  const now = new Date();
-  const diffMs = limitDate.getTime() - now.getTime();
-
-  if (diffMs < 0) {
+  if (isPast(limitDate)) {
     return { isOverdue: true, text: '期限切れ' };
   }
 
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMinutes / 60);
-  const diffDays = Math.floor(diffHours / 24);
+  const now = new Date();
+  const diffMinutes = differenceInMinutes(limitDate, now);
+
+  if (diffMinutes <= 1) {
+    return { isOverdue: false, text: '残りわずか' };
+  }
+
+  const diffHours = differenceInHours(limitDate, now);
+  const diffDays = differenceInDays(limitDate, now);
 
   if (diffDays > 0) {
     const remainingHours = diffHours % 24;
     const remainingMinutes = diffMinutes % 60;
-
     if (remainingHours > 0) {
       return { isOverdue: false, text: `${diffDays}日${remainingHours}時間${remainingMinutes}分` };
-    } else {
-      return { isOverdue: false, text: `${diffDays}日${remainingMinutes}分` };
     }
+    return { isOverdue: false, text: `${diffDays}日${remainingMinutes}分` };
   } else if (diffHours > 0) {
     const remainingMinutes = diffMinutes % 60;
     return { isOverdue: false, text: `${diffHours}時間${remainingMinutes}分` };
@@ -64,19 +46,17 @@ export const calculateTimeRemaining = (limitString) => {
 
 export const isOverdue = (limitString) => {
   if (!limitString) return false;
-
   const limitDate = new Date(limitString);
   if (isNaN(limitDate.getTime())) return false;
-
-  const now = new Date();
-  return limitDate.getTime() < now.getTime();
+  return isPast(limitDate);
 };
 
 export const convertToServerFormat = (dateTimeLocalString) => {
-  if (!dateTimeLocalString) return null;
-
+  if (!dateTimeLocalString) return '';
   const date = new Date(dateTimeLocalString);
-  if (isNaN(date.getTime())) return null;
-
-  return date.toISOString().slice(0, 19);
+  if (isNaN(date.getTime())) return '';
+  // Convert to ISO 8601 UTC string (e.g., "2023-12-12T23:59:59.000Z")
+  const isoString = date.toISOString();
+  // Truncate milliseconds and ensure 'Z' suffix
+  return isoString.slice(0, 19) + 'Z';
 };

@@ -1,3 +1,6 @@
+import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BackButton } from '@/components/BackButton';
 import { ErrorMessage } from '@/components/ErrorMessage';
 import { FormActions } from '@/components/FormActions';
@@ -7,23 +10,18 @@ import { useId } from '@/hooks/useId';
 import { setCurrentList } from '@/store/list';
 import { deleteTask, fetchTasks, updateTask } from '@/store/task';
 import { convertToServerFormat, formatDateTimeForInput } from '@/utils/dateUtils';
+import { validateDateTimeLocal, titleValidation, detailValidation } from '@/utils/validation';
 import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
 import './index.css';
+import '@/components/ErrorMessage.css';
 
 const EditTask = () => {
   const id = useId();
-
   const { listId, taskId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [title, setTitle] = useState('');
-  const [detail, setDetail] = useState('');
-  const [done, setDone] = useState(false);
-  const [limit, setLimit] = useState('');
-
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm();
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -31,59 +29,36 @@ const EditTask = () => {
 
   useEffect(() => {
     if (task) {
-      setTitle(task.title);
-      setDetail(task.detail);
-      setDone(task.done);
-      setLimit(formatDateTimeForInput(task.limit));
+      setValue('title', task.title);
+      setValue('detail', task.detail);
+      setValue('done', task.done);
+      setValue('limit', formatDateTimeForInput(task.limit));
     }
-  }, [task]);
+  }, [task, setValue]);
 
   useEffect(() => {
     void dispatch(setCurrentList(listId));
     void dispatch(fetchTasks());
   }, [listId, dispatch]);
 
-  const onSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-
-      setIsSubmitting(true);
-
-      const limitFormatted = convertToServerFormat(limit);
-
-      void dispatch(updateTask({ id: taskId, title, detail, done, limit: limitFormatted }))
-        .unwrap()
-        .then(() => {
-          navigate(`/lists/${listId}`);
-        })
-        .catch((err) => {
-          setErrorMessage(err.message);
-        })
-        .finally(() => {
-          setIsSubmitting(false);
-        });
-    },
-    [title, taskId, listId, detail, done, limit, dispatch, navigate]
-  );
+  const onSubmit = useCallback((data) => {
+    setIsSubmitting(true);
+    const limitFormatted = convertToServerFormat(data.limit);
+    void dispatch(updateTask({ id: taskId, ...data, done: data.done || false, limit: limitFormatted }))
+      .unwrap()
+      .then(() => navigate(`/lists/${listId}`))
+      .catch((err) => setErrorMessage(err.message))
+      .finally(() => setIsSubmitting(false));
+  }, [taskId, listId, dispatch, navigate]);
 
   const handleDelete = useCallback(() => {
-    if (!window.confirm('Are you sure you want to delete this task?')) {
-      return;
-    }
-
+    if (!window.confirm('Are you sure you want to delete this task?')) return;
     setIsSubmitting(true);
-
     void dispatch(deleteTask({ id: taskId }))
       .unwrap()
-      .then(() => {
-        navigate(`/`);
-      })
-      .catch((err) => {
-        setErrorMessage(err.message);
-      })
-      .finally(() => {
-        setIsSubmitting(false);
-      });
+      .then(() => navigate('/'))
+      .catch((err) => setErrorMessage(err.message))
+      .finally(() => setIsSubmitting(false));
   }, [taskId, dispatch, navigate]);
 
   const deleteButton = (
@@ -102,47 +77,46 @@ const EditTask = () => {
       <BackButton />
       <PageTitle className='edit_list__title'>Edit Task</PageTitle>
       <ErrorMessage message={errorMessage} className='edit_list__error' />
-      <form className='edit_list__form' onSubmit={onSubmit}>
+      <form className='edit_list__form' onSubmit={handleSubmit(onSubmit)}>
         <FormField
           id={`${id}-title`}
           label='Title'
           className='app_input'
           placeholder='Buy some milk'
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
           fieldClassName='edit_list__form_field'
           labelClassName='edit_list__form_label'
+          {...register('title', titleValidation)}
         />
+        {errors.title && <p className="error-message">{errors.title.message}</p>}
         <FormField
           id={`${id}-detail`}
           label='Description'
           as='textarea'
           className='app_input'
           placeholder='Blah blah blah'
-          value={detail}
-          onChange={(event) => setDetail(event.target.value)}
           fieldClassName='edit_list__form_field'
           labelClassName='edit_list__form_label'
+          {...register('detail', detailValidation)}
         />
+        {errors.detail && <p className="error-message">{errors.detail.message}</p>}
         <FormField
           id={`${id}-done`}
           label='Is Done'
           type='checkbox'
-          checked={done}
-          onChange={(event) => setDone(event.target.checked)}
           fieldClassName='edit_list__form_field'
           labelClassName='edit_list__form_label'
+          {...register('done')}
         />
         <FormField
           id={`${id}-limit`}
           label='Deadline'
           type='datetime-local'
           className='app_input'
-          value={limit}
-          onChange={(event) => setLimit(event.target.value)}
           fieldClassName='edit_list__form_field'
           labelClassName='edit_list__form_label'
+          {...register('limit', { validate: validateDateTimeLocal })}
         />
+        {errors.limit && <p className="error-message">{errors.limit.message}</p>}
         <FormActions
           cancelLink='/'
           cancelText='Cancel'
@@ -151,6 +125,7 @@ const EditTask = () => {
           deleteButton={deleteButton}
           className='edit_list__form_actions'
           spacerClassName='edit_list__form_actions_spacer'
+          submitDisabled={!!errors.title || !!errors.detail || !!errors.limit}
         />
       </form>
     </main>

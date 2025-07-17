@@ -12,7 +12,7 @@ export const useLogin = () => {
       await dispatch(login({ email, password })).unwrap();
       navigate('/');
     },
-    [useDispatch]
+    [dispatch, navigate]
   );
 
   return {

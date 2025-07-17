@@ -11,13 +11,13 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(fetchLists());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (currentListId) {
       navigate(`/lists/${currentListId}`);
     }
-  }, [currentListId]);
+  }, [currentListId, navigate]);
 
   return <div></div>;
 };

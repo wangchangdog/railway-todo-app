@@ -1,26 +1,28 @@
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { CheckIcon } from '@/icons/CheckIcon';
 import { createTask } from '@/store/task';
 import { convertToServerFormat } from '@/utils/dateUtils';
+import { validateDateTimeLocal, titleValidation, detailValidation } from '@/utils/validation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import './TaskCreateForm.css';
+import './ErrorMessage.css';
 
 export const TaskCreateForm = () => {
   const dispatch = useDispatch();
-
+  const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm();
   const refForm = useRef(null);
   const [elemTextarea, setElemTextarea] = useState(null);
-
   const [formState, setFormState] = useState('initial');
 
-  const [title, setTitle] = useState('');
-  const [detail, setDetail] = useState('');
-  const [done, setDone] = useState(false);
-  const [limit, setLimit] = useState('');
+  const done = watch('done', false);
+  const title = watch('title', '');
+  const detail = watch('detail', '');
+  const limit = watch('limit', '');
 
   const handleToggle = useCallback(() => {
-    setDone((prev) => !prev);
-  }, []);
+    setValue('done', !done);
+  }, [done, setValue]);
 
   const handleFocus = useCallback(() => {
     setFormState('focused');
@@ -30,68 +32,48 @@ export const TaskCreateForm = () => {
     if (title || detail || limit) {
       return;
     }
-
     setTimeout(() => {
-      // フォーム内の要素がフォーカスされている場合は何もしない
       const formElement = refForm.current;
       if (formElement && formElement.contains(document.activeElement)) {
         return;
       }
-
       setFormState('initial');
-      setDone(false);
+      reset();
     }, 100);
-  }, [title, detail, limit]);
+  }, [title, detail, limit, reset]);
 
   const handleDiscard = useCallback(() => {
-    setTitle('');
-    setDetail('');
-    setLimit('');
+    reset();
     setFormState('initial');
-    setDone(false);
-  }, []);
+  }, [reset]);
 
-  const onSubmit = useCallback(
-    (event) => {
-      event.preventDefault();
-
-      setFormState('submitting');
-
-      const limitFormatted = convertToServerFormat(limit);
-
-      void dispatch(createTask({ title, detail, done, limit: limitFormatted }))
-        .unwrap()
-        .then(() => {
-          handleDiscard();
-        })
-        .catch((err) => {
-          alert(err.message);
-          setFormState('focused');
-        });
-    },
-    [title, detail, done, limit]
-  );
+  const onSubmit = useCallback((data) => {
+    setFormState('submitting');
+    const limitFormatted = convertToServerFormat(data.limit);
+    void dispatch(createTask({ ...data, done: data.done || false, limit: limitFormatted }))
+      .unwrap()
+      .then(() => {
+        handleDiscard();
+      })
+      .catch((err) => {
+        alert(err.message);
+        setFormState('focused');
+      });
+  }, [dispatch, handleDiscard]);
 
   useEffect(() => {
-    if (!elemTextarea) {
-      return;
-    }
-
+    if (!elemTextarea) return;
     const recalcHeight = () => {
       elemTextarea.style.height = 'auto';
       elemTextarea.style.height = `${elemTextarea.scrollHeight}px`;
     };
-
     elemTextarea.addEventListener('input', recalcHeight);
     recalcHeight();
-
-    return () => {
-      elemTextarea.removeEventListener('input', recalcHeight);
-    };
+    return () => elemTextarea.removeEventListener('input', recalcHeight);
   }, [elemTextarea]);
 
   return (
-    <form ref={refForm} className='task_create_form' onSubmit={onSubmit} data-state={formState}>
+    <form ref={refForm} className='task_create_form' onSubmit={handleSubmit(onSubmit)} data-state={formState}>
       <div className='task_create_form__title_container'>
         <button
           type='button'
@@ -112,58 +94,54 @@ export const TaskCreateForm = () => {
           type='text'
           className='task_create_form__title'
           placeholder='Add a new task...'
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          {...register('title', titleValidation)}
           onFocus={handleFocus}
           onBlur={handleBlur}
           disabled={formState === 'submitting'}
         />
       </div>
-      {formState !== 'initial' && (
-        <div>
-          <textarea
-            ref={setElemTextarea}
-            rows={1}
-            className='task_create_form__detail'
-            placeholder='Add a description here...'
-            value={detail}
-            onChange={(e) => setDetail(e.target.value)}
-            onBlur={handleBlur}
-            disabled={formState === 'submitting'}
-          />
-          <input
-            type='datetime-local'
-            className='task_create_form__limit'
-            placeholder='Set deadline...'
-            value={limit}
-            onChange={(e) => setLimit(e.target.value)}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            disabled={formState === 'submitting'}
-          />
-          <div className='task_create_form__actions'>
-            <button
-              type='button'
-              className='app_button'
-              data-variant='secondary'
-              onBlur={handleBlur}
-              onClick={handleDiscard}
-              disabled={(!title && !detail && !limit) || formState === 'submitting'}
-            >
-              Discard
-            </button>
-            <div className='task_create_form__spacer'></div>
-            <button
-              type='submit'
-              className='app_button'
-              onBlur={handleBlur}
-              disabled={!title || formState === 'submitting'}
-            >
-              Add
-            </button>
-          </div>
-        </div>
-      )}
+      {errors.title && <p className="error-message">{errors.title.message}</p>}
+      <textarea
+        ref={setElemTextarea}
+        rows={1}
+        className='task_create_form__detail'
+        placeholder='Add a description here...'
+        {...register('detail', detailValidation)}
+        onBlur={handleBlur}
+        disabled={formState === 'submitting'}
+      />
+      {errors.detail && <p className="error-message">{errors.detail.message}</p>}
+      <input
+        type='datetime-local'
+        className='task_create_form__limit'
+        placeholder='Set deadline...'
+        {...register('limit', { validate: validateDateTimeLocal })}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        disabled={formState === 'submitting'}
+      />
+      {errors.limit && <p className="error-message">{errors.limit.message}</p>}
+      <div className='task_create_form__actions'>
+        <button
+          type='button'
+          className='app_button'
+          data-variant='secondary'
+          onBlur={handleBlur}
+          onClick={handleDiscard}
+          disabled={(!title && !detail && !limit) || formState === 'submitting'}
+        >
+          Discard
+        </button>
+        <div className='task_create_form__spacer'></div>
+        <button
+          type='submit'
+          className='app_button'
+          onBlur={handleBlur}
+          disabled={!title || formState === 'submitting' || !!errors.title || !!errors.detail || !!errors.limit}
+        >
+          Add
+        </button>
+      </div>
     </form>
   );
 };
