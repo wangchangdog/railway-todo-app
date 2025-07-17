@@ -3,7 +3,7 @@ import axios from '@/vendor/axios';
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  tasks: null,
+  tasks: [],
   listId: null,
   isLoading: false,
 };
@@ -13,7 +13,7 @@ export const taskSlice = createSlice({
   initialState,
   reducers: {
     resetTask: (state, _action) => {
-      state.tasks = null;
+      state.tasks = [];
       state.listId = null;
       state.isLoading = false;
     },
@@ -27,12 +27,12 @@ export const taskSlice = createSlice({
       state.isLoading = action.payload;
     },
     addTask: (state, action) => {
-      const title = action.payload.title;
-      const id = action.payload.id;
-      const detail = action.payload.detail;
-      const done = action.payload.done;
-
-      state.tasks.push({ title, id, detail, done });
+      if (!state.tasks) {
+        state.tasks = [];
+      }
+      
+      const { title, id, detail, done, limit } = action.payload;
+      state.tasks.push({ title, id, detail, done, limit });
     },
     mutateTask: (state, action) => {
       const id = action.payload.id;
@@ -102,6 +102,9 @@ export const createTask = createAsyncThunk('task/createTask', async (payload, th
         id,
       })
     );
+    
+    // タスク作成後にリストを再取得して確実に同期
+    thunkApi.dispatch(fetchTasks({ force: true }));
   } catch (e) {
     handleThunkError(e, thunkApi);
   }

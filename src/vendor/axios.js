@@ -5,6 +5,9 @@ import axios from 'axios';
  */
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_RAILWAY_TODO_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 axiosInstance.interceptors.response.use(

@@ -1,9 +1,13 @@
-import { BackButton } from '@/components/BackButton';
-import { useId } from '@/hooks/useId';
-import { deleteList, fetchLists, updateList } from '@/store/list';
-import { useCallback, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import BackButton from '@/components/BackButton/index';
+import ErrorMessage from '@/components/ErrorMessage/index';
+import {FormActions} from '@/components/FormActions/index';
+import {FormField} from '@/components/FormField/index';
+import {PageTitle} from '@/components/PageTitle/index';
+import {useId} from '@/hooks/useId';
+import {deleteList, fetchLists, updateList} from '@/store/list';
+import {useCallback, useEffect, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate, useParams} from 'react-router-dom';
 import './index.css';
 
 const EditList = () => {
@@ -28,7 +32,7 @@ const EditList = () => {
 
   useEffect(() => {
     void dispatch(fetchLists());
-  }, [listId]);
+  }, [listId, dispatch]);
 
   const onSubmit = useCallback(
     (event) => {
@@ -48,7 +52,7 @@ const EditList = () => {
           setIsSubmitting(false);
         });
     },
-    [title, listId]
+    [title, listId, dispatch, navigate]
   );
 
   const handleDelete = useCallback(() => {
@@ -69,43 +73,44 @@ const EditList = () => {
       .finally(() => {
         setIsSubmitting(false);
       });
-  }, []);
+  }, [listId, dispatch, navigate]);
+
+  const deleteButton = (
+    <button
+      type='button'
+      className='app_button edit_list__form_actions_delete'
+      disabled={isSubmitting}
+      onClick={handleDelete}
+    >
+      Delete
+    </button>
+  );
 
   return (
     <main className='edit_list'>
       <BackButton />
-      <h2 className='edit_list__title'>Edit List</h2>
-      <p className='edit_list__error'>{errorMessage}</p>
+      <PageTitle className='edit_list__title'>Edit List</PageTitle>
+      <ErrorMessage message={errorMessage} className='edit_list__error' />
       <form className='edit_list__form' onSubmit={onSubmit}>
-        <fieldset className='edit_list__form_field'>
-          <label htmlFor={`${id}-title`} className='edit_list__form_label'>
-            Name
-          </label>
-          <input
-            id={`${id}-title`}
-            className='app_input'
-            placeholder='Family'
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-        </fieldset>
-        <div className='edit_list__form_actions'>
-          <Link to='/' data-variant='secondary' className='app_button'>
-            Cancel
-          </Link>
-          <div className='edit_list__form_actions_spacer'></div>
-          <button
-            type='button'
-            className='app_button edit_list__form_actions_delete'
-            disabled={isSubmitting}
-            onClick={handleDelete}
-          >
-            Delete
-          </button>
-          <button type='submit' className='app_button' disabled={isSubmitting}>
-            Update
-          </button>
-        </div>
+        <FormField
+          id={`${id}-title`}
+          label='Name'
+          className='app_input'
+          placeholder='Family'
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          fieldClassName='edit_list__form_field'
+          labelClassName='edit_list__form_label'
+        />
+        <FormActions
+          cancelLink='/'
+          cancelText='Cancel'
+          submitText='Update'
+          isSubmitting={isSubmitting}
+          deleteButton={deleteButton}
+          className='edit_list__form_actions'
+          spacerClassName='edit_list__form_actions_spacer'
+        />
       </form>
     </main>
   );

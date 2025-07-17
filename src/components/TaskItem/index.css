@@ -74,3 +74,26 @@
   font-size: 1rem;
   color: var(--slate-500);
 }
+
+.task_item__limit {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.task_item__limit_date {
+  color: var(--slate-600);
+  font-weight: 500;
+}
+
+.task_item__time_remaining {
+  color: var(--slate-500);
+  font-size: 0.75rem;
+}
+
+.task_item__time_remaining--overdue {
+  color: var(--red-600);
+  font-weight: 600;
+}

@@ -5,7 +5,7 @@ import { fetchLists } from '@/store/list/index';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
-import './Sidebar.css';
+import './index.css';
 
 export const Sidebar = () => {
   const dispatch = useDispatch();
@@ -23,7 +23,7 @@ export const Sidebar = () => {
 
   useEffect(() => {
     void dispatch(fetchLists());
-  }, []);
+  }, [dispatch]);
 
   return (
     <div className='sidebar'>

@@ -1,0 +1,13 @@
+.form_field {
+  border: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+.form_label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #374151;
+}
