@@ -1,15 +1,17 @@
-import { ChevronIcon } from '@/icons/ChevronIcon';
-import './BackButton.css';
+import {ChevronIcon} from '@/icons/ChevronIcon';
+import './index.css';
 
 const handleClick = () => {
   window.history.back();
 };
 
-export const BackButton = () => {
+function BackButton() {
   return (
     <button type='button' onClick={handleClick} className='back_button'>
       <ChevronIcon className='back_button__icon' />
       Back
     </button>
   );
-};
+}
+
+export default BackButton;

@@ -5,7 +5,7 @@ import { calculateTimeRemaining, formatDateTimeForDisplay } from '@/utils/dateUt
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import './TaskItem.css';
+import './index.css';
 
 export const TaskItem = ({ task }) => {
   const dispatch = useDispatch();

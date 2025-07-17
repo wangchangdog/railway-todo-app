@@ -1,4 +1,4 @@
-import { Sidebar } from '@/components/Sidebar';
+import { Sidebar } from '@/components/Sidebar/index';
 import NotFound from '@/pages/404';
 import Home from '@/pages/index.page';
 import NewList from '@/pages/list/new/index.page';

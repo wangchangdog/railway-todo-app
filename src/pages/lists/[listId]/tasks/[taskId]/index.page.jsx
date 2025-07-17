@@ -1,19 +1,18 @@
-import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { BackButton } from '@/components/BackButton';
-import { ErrorMessage } from '@/components/ErrorMessage';
-import { FormActions } from '@/components/FormActions';
-import { FormField } from '@/components/FormField';
-import { PageTitle } from '@/components/PageTitle';
-import { useId } from '@/hooks/useId';
-import { setCurrentList } from '@/store/list';
-import { deleteTask, fetchTasks, updateTask } from '@/store/task';
-import { convertToServerFormat, formatDateTimeForInput } from '@/utils/dateUtils';
-import { validateDateTimeLocal, titleValidation, detailValidation } from '@/utils/validation';
-import { useCallback, useEffect, useState } from 'react';
+import BackButton from '@/components/BackButton/index';
+import ErrorMessage from '@/components/ErrorMessage/index';
+import {FormActions} from '@/components/FormActions/index';
+import {FormField} from '@/components/FormField/index';
+import {PageTitle} from '@/components/PageTitle/index';
+import {useId} from '@/hooks/useId';
+import {setCurrentList} from '@/store/list';
+import {deleteTask, fetchTasks, updateTask} from '@/store/task';
+import {convertToServerFormat, formatDateTimeForInput} from '@/utils/dateUtils';
+import {detailValidation, titleValidation, validateDateTimeLocal} from '@/utils/validation';
+import {useCallback, useEffect, useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {useDispatch, useSelector} from 'react-redux';
+import {useNavigate, useParams} from 'react-router-dom';
 import './index.css';
-import '@/components/ErrorMessage.css';
 
 const EditTask = () => {
   const id = useId();

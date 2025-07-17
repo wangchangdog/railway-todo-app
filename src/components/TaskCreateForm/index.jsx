@@ -5,8 +5,7 @@ import { createTask } from '@/store/task';
 import { convertToServerFormat } from '@/utils/dateUtils';
 import { validateDateTimeLocal, titleValidation, detailValidation } from '@/utils/validation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import './TaskCreateForm.css';
-import './ErrorMessage.css';
+import './index.css';
 
 export const TaskCreateForm = () => {
   const dispatch = useDispatch();

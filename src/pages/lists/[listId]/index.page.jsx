@@ -1,5 +1,5 @@
-import { TaskCreateForm } from '@/components/TaskCreateForm';
-import { TaskItem } from '@/components/TaskItem';
+import { TaskCreateForm } from '@/components/TaskCreateForm/index';
+import { TaskItem } from '@/components/TaskItem/index';
 import { setCurrentList } from '@/store/list';
 import { fetchTasks } from '@/store/task';
 import { useEffect } from 'react';

@@ -1,13 +1,13 @@
-import { BackButton } from '@/components/BackButton';
-import { ErrorMessage } from '@/components/ErrorMessage';
-import { FormActions } from '@/components/FormActions';
-import { FormField } from '@/components/FormField';
-import { PageTitle } from '@/components/PageTitle';
-import { useId } from '@/hooks/useId';
-import { createList, setCurrentList } from '@/store/list/index';
-import { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import BackButton from '@/components/BackButton/index';
+import ErrorMessage from '@/components/ErrorMessage/index';
+import {FormActions} from '@/components/FormActions/index';
+import {FormField} from '@/components/FormField/index';
+import {PageTitle} from '@/components/PageTitle/index';
+import {useId} from '@/hooks/useId';
+import {createList, setCurrentList} from '@/store/list/index';
+import {useCallback, useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {useNavigate} from 'react-router-dom';
 import './index.css';
 
 const NewList = () => {

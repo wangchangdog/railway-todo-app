@@ -1,4 +1,4 @@
-import './FormField.css';
+import './index.css';
 
 export const FormField = ({
   id,

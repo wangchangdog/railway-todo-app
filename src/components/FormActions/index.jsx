@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './FormActions.css';
+import './index.css';
 
 export const FormActions = ({
   cancelLink,
