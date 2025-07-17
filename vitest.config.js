@@ -4,6 +4,7 @@ import { resolve } from 'path';
 export default defineConfig({
   test: {
     environment: 'jsdom',
+    setupFiles: ['src/test/setup.js'],
     coverage: {
       reporter: ['text', 'json', 'html'],
       all: true,

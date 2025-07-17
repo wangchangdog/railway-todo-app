@@ -9,7 +9,14 @@ import './index.css';
 
 export const TaskCreateForm = () => {
   const dispatch = useDispatch();
-  const { register, handleSubmit, formState: { errors }, watch, setValue, reset } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+    setValue,
+    reset,
+  } = useForm();
   const refForm = useRef(null);
   const [elemTextarea, setElemTextarea] = useState(null);
   const [formState, setFormState] = useState('initial');
@@ -46,19 +53,22 @@ export const TaskCreateForm = () => {
     setFormState('initial');
   }, [reset]);
 
-  const onSubmit = useCallback((data) => {
-    setFormState('submitting');
-    const limitFormatted = convertToServerFormat(data.limit);
-    void dispatch(createTask({ ...data, done: data.done || false, limit: limitFormatted }))
-      .unwrap()
-      .then(() => {
-        handleDiscard();
-      })
-      .catch((err) => {
-        alert(err.message);
-        setFormState('focused');
-      });
-  }, [dispatch, handleDiscard]);
+  const onSubmit = useCallback(
+    (data) => {
+      setFormState('submitting');
+      const limitFormatted = convertToServerFormat(data.limit);
+      void dispatch(createTask({ ...data, done: data.done || false, limit: limitFormatted }))
+        .unwrap()
+        .then(() => {
+          handleDiscard();
+        })
+        .catch((err) => {
+          alert(err.message);
+          setFormState('focused');
+        });
+    },
+    [dispatch, handleDiscard]
+  );
 
   useEffect(() => {
     if (!elemTextarea) return;
@@ -72,7 +82,12 @@ export const TaskCreateForm = () => {
   }, [elemTextarea]);
 
   return (
-    <form ref={refForm} className='task_create_form' onSubmit={handleSubmit(onSubmit)} data-state={formState}>
+    <form
+      ref={refForm}
+      className='task_create_form'
+      onSubmit={handleSubmit(onSubmit)}
+      data-state={formState}
+    >
       <div className='task_create_form__title_container'>
         <button
           type='button'
@@ -99,7 +114,7 @@ export const TaskCreateForm = () => {
           disabled={formState === 'submitting'}
         />
       </div>
-      {errors.title && <p className="error-message">{errors.title.message}</p>}
+      {errors.title && <p className='error-message'>{errors.title.message}</p>}
       <textarea
         ref={setElemTextarea}
         rows={1}
@@ -109,7 +124,7 @@ export const TaskCreateForm = () => {
         onBlur={handleBlur}
         disabled={formState === 'submitting'}
       />
-      {errors.detail && <p className="error-message">{errors.detail.message}</p>}
+      {errors.detail && <p className='error-message'>{errors.detail.message}</p>}
       <input
         type='datetime-local'
         className='task_create_form__limit'
@@ -119,7 +134,7 @@ export const TaskCreateForm = () => {
         onBlur={handleBlur}
         disabled={formState === 'submitting'}
       />
-      {errors.limit && <p className="error-message">{errors.limit.message}</p>}
+      {errors.limit && <p className='error-message'>{errors.limit.message}</p>}
       <div className='task_create_form__actions'>
         <button
           type='button'
@@ -136,7 +151,13 @@ export const TaskCreateForm = () => {
           type='submit'
           className='app_button'
           onBlur={handleBlur}
-          disabled={!title || formState === 'submitting' || !!errors.title || !!errors.detail || !!errors.limit}
+          disabled={
+            !title ||
+            formState === 'submitting' ||
+            !!errors.title ||
+            !!errors.detail ||
+            !!errors.limit
+          }
         >
           Add
         </button>

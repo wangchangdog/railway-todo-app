@@ -1,12 +1,12 @@
 import ErrorMessage from '@/components/ErrorMessage/index';
-import {FormActions} from '@/components/FormActions/index';
-import {FormField} from '@/components/FormField/index';
-import {PageTitle} from '@/components/PageTitle/index';
-import {useId} from '@/hooks/useId';
-import {useLogin} from '@/hooks/useLogin';
-import {useCallback, useState} from 'react';
-import {useSelector} from 'react-redux';
-import {Navigate} from 'react-router-dom';
+import { FormActions } from '@/components/FormActions/index';
+import { FormField } from '@/components/FormField/index';
+import { PageTitle } from '@/components/PageTitle/index';
+import { useId } from '@/hooks/useId';
+import { useLogin } from '@/hooks/useLogin';
+import { useCallback, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
 import './index.css';
 
 const SignIn = () => {

@@ -30,7 +30,7 @@ export const taskSlice = createSlice({
       if (!state.tasks) {
         state.tasks = [];
       }
-      
+
       const { title, id, detail, done, limit } = action.payload;
       state.tasks.push({ title, id, detail, done, limit });
     },
@@ -102,7 +102,7 @@ export const createTask = createAsyncThunk('task/createTask', async (payload, th
         id,
       })
     );
-    
+
     // タスク作成後にリストを再取得して確実に同期
     thunkApi.dispatch(fetchTasks({ force: true }));
   } catch (e) {
