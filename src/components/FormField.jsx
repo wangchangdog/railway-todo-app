@@ -12,13 +12,19 @@ export const FormField = ({
   as = 'input',
   rows,
   checked,
+  fieldClassName,
+  labelClassName,
   ...props
 }) => {
   const InputComponent = as;
   
+  // デフォルトのクラス名を設定、カスタムクラス名がある場合はそれを使用
+  const finalFieldClassName = fieldClassName || 'form_field';
+  const finalLabelClassName = labelClassName || 'form_label';
+  
   return (
-    <fieldset className='form_field'>
-      <label htmlFor={id} className='form_label'>
+    <fieldset className={finalFieldClassName}>
+      <label htmlFor={id} className={finalLabelClassName}>
         {label}
       </label>
       {type === 'checkbox' ? (

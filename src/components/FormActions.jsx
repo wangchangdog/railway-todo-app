@@ -8,7 +8,8 @@ export const FormActions = ({
   isSubmitting = false,
   deleteButton = null,
   onCancel,
-  className = 'form_actions'
+  className = 'form_actions',
+  spacerClassName = 'form_actions_spacer'
 }) => {
   return (
     <div className={className}>
@@ -27,7 +28,7 @@ export const FormActions = ({
           {cancelText}
         </button>
       ) : null}
-      <div className='form_actions_spacer' />
+      <div className={spacerClassName} />
       {deleteButton}
       <button type='submit' className='app_button' disabled={isSubmitting}>
         {submitText}
