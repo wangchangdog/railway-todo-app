@@ -1,0 +1,9 @@
+.form_actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form_actions_spacer {
+  flex: 1;
+}
