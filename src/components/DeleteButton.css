@@ -1,0 +1,13 @@
+.delete_button {
+  background-color: #dc2626;
+  color: white;
+}
+
+.delete_button:hover:not(:disabled) {
+  background-color: #b91c1c;
+}
+
+.delete_button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

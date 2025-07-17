@@ -83,6 +83,25 @@
   outline: none;
 }
 
+.task_create_form__limit {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font: inherit;
+  background: transparent;
+  color: var(--slate-500);
+  border: 1px solid var(--slate-300);
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+.task_create_form__limit:focus {
+  outline: none;
+  border-color: var(--indigo-600);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
 .task_create_form__actions {
   margin-top: 1rem;
   display: flex;

@@ -1,8 +1,12 @@
+import { ErrorMessage } from '@/components/ErrorMessage';
+import { FormActions } from '@/components/FormActions';
+import { FormField } from '@/components/FormField';
+import { PageTitle } from '@/components/PageTitle';
 import { useId } from '@/hooks/useId';
 import { useLogin } from '@/hooks/useLogin';
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import './index.css';
 
 const SignIn = () => {
@@ -30,7 +34,7 @@ const SignIn = () => {
           setIsSubmitting(false);
         });
     },
-    [email, password]
+    [email, password, login]
   );
 
   if (auth) {
@@ -39,44 +43,39 @@ const SignIn = () => {
 
   return (
     <main className='signin'>
-      <h2 className='signin__title'>Login</h2>
-      <p className='signin__error'>{errorMessage}</p>
+      <PageTitle className='signin__title'>Login</PageTitle>
+      <ErrorMessage message={errorMessage} className='signin__error' />
       <form className='signin__form' onSubmit={onSubmit}>
-        <fieldset className='signin__form_field'>
-          <label htmlFor={`${id}-email`} className='signin__form_label'>
-            E-mail Address
-          </label>
-          <input
-            id={`${id}-email`}
-            type='email'
-            autoComplete='email'
-            className='app_input'
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </fieldset>
-        <fieldset className='signin__form_field'>
-          <label htmlFor={`${id}-password`} className='signin__form_label'>
-            Password
-          </label>
-          <input
-            id={`${id}-password`}
-            type='password'
-            autoComplete='current-password'
-            className='app_input'
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </fieldset>
-        <div className='signin__form_actions'>
-          <Link className='app_button' data-variant='secondary' to='/signup'>
-            Register
-          </Link>
-          <div className='signin__form_actions_spacer'></div>
-          <button type='submit' className='app_button' disabled={isSubmitting}>
-            Login
-          </button>
-        </div>
+        <FormField
+          id={`${id}-email`}
+          label='E-mail Address'
+          type='email'
+          autoComplete='email'
+          className='app_input'
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          fieldClassName='signin__form_field'
+          labelClassName='signin__form_label'
+        />
+        <FormField
+          id={`${id}-password`}
+          label='Password'
+          type='password'
+          autoComplete='current-password'
+          className='app_input'
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          fieldClassName='signin__form_field'
+          labelClassName='signin__form_label'
+        />
+        <FormActions
+          cancelLink='/signup'
+          cancelText='Register'
+          submitText='Login'
+          isSubmitting={isSubmitting}
+          className='signin__form_actions'
+          spacerClassName='signin__form_actions_spacer'
+        />
       </form>
     </main>
   );

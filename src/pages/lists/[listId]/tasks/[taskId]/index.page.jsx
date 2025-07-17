@@ -1,10 +1,15 @@
 import { BackButton } from '@/components/BackButton';
+import { ErrorMessage } from '@/components/ErrorMessage';
+import { FormActions } from '@/components/FormActions';
+import { FormField } from '@/components/FormField';
+import { PageTitle } from '@/components/PageTitle';
 import { useId } from '@/hooks/useId';
 import { setCurrentList } from '@/store/list';
 import { deleteTask, fetchTasks, updateTask } from '@/store/task';
+import { convertToServerFormat, formatDateTimeForInput } from '@/utils/dateUtils';
 import { useCallback, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './index.css';
 
 const EditTask = () => {
@@ -17,6 +22,7 @@ const EditTask = () => {
   const [title, setTitle] = useState('');
   const [detail, setDetail] = useState('');
   const [done, setDone] = useState(false);
+  const [limit, setLimit] = useState('');
 
   const [errorMessage, setErrorMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,13 +34,14 @@ const EditTask = () => {
       setTitle(task.title);
       setDetail(task.detail);
       setDone(task.done);
+      setLimit(formatDateTimeForInput(task.limit));
     }
   }, [task]);
 
   useEffect(() => {
     void dispatch(setCurrentList(listId));
     void dispatch(fetchTasks());
-  }, [listId]);
+  }, [listId, dispatch]);
 
   const onSubmit = useCallback(
     (event) => {
@@ -42,7 +49,9 @@ const EditTask = () => {
 
       setIsSubmitting(true);
 
-      void dispatch(updateTask({ id: taskId, title, detail, done }))
+      const limitFormatted = convertToServerFormat(limit);
+
+      void dispatch(updateTask({ id: taskId, title, detail, done, limit: limitFormatted }))
         .unwrap()
         .then(() => {
           navigate(`/lists/${listId}`);
@@ -54,7 +63,7 @@ const EditTask = () => {
           setIsSubmitting(false);
         });
     },
-    [title, taskId, listId, detail, done]
+    [title, taskId, listId, detail, done, limit, dispatch, navigate]
   );
 
   const handleDelete = useCallback(() => {
@@ -75,68 +84,74 @@ const EditTask = () => {
       .finally(() => {
         setIsSubmitting(false);
       });
-  }, [taskId]);
+  }, [taskId, dispatch, navigate]);
+
+  const deleteButton = (
+    <button
+      type='button'
+      className='app_button edit_list__form_actions_delete'
+      disabled={isSubmitting}
+      onClick={handleDelete}
+    >
+      Delete
+    </button>
+  );
 
   return (
     <main className='edit_list'>
       <BackButton />
-      <h2 className='edit_list__title'>Edit List</h2>
-      <p className='edit_list__error'>{errorMessage}</p>
+      <PageTitle className='edit_list__title'>Edit Task</PageTitle>
+      <ErrorMessage message={errorMessage} className='edit_list__error' />
       <form className='edit_list__form' onSubmit={onSubmit}>
-        <fieldset className='edit_list__form_field'>
-          <label htmlFor={`${id}-title`} className='edit_list__form_label'>
-            Title
-          </label>
-          <input
-            id={`${id}-title`}
-            className='app_input'
-            placeholder='Buy some milk'
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-        </fieldset>
-        <fieldset className='edit_list__form_field'>
-          <label htmlFor={`${id}-detail`} className='edit_list__form_label'>
-            Description
-          </label>
-          <textarea
-            id={`${id}-detail`}
-            className='app_input'
-            placeholder='Blah blah blah'
-            value={detail}
-            onChange={(event) => setDetail(event.target.value)}
-          />
-        </fieldset>
-        <fieldset className='edit_list__form_field'>
-          <label htmlFor={`${id}-done`} className='edit_list__form_label'>
-            Is Done
-          </label>
-          <div>
-            <input
-              id={`${id}-done`}
-              type='checkbox'
-              checked={done}
-              onChange={(event) => setDone(event.target.checked)}
-            />
-          </div>
-        </fieldset>
-        <div className='edit_list__form_actions'>
-          <Link to='/' data-variant='secondary' className='app_button'>
-            Cancel
-          </Link>
-          <div className='edit_list__form_actions_spacer'></div>
-          <button
-            type='button'
-            className='app_button edit_list__form_actions_delete'
-            disabled={isSubmitting}
-            onClick={handleDelete}
-          >
-            Delete
-          </button>
-          <button type='submit' className='app_button' disabled={isSubmitting}>
-            Update
-          </button>
-        </div>
+        <FormField
+          id={`${id}-title`}
+          label='Title'
+          className='app_input'
+          placeholder='Buy some milk'
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          fieldClassName='edit_list__form_field'
+          labelClassName='edit_list__form_label'
+        />
+        <FormField
+          id={`${id}-detail`}
+          label='Description'
+          as='textarea'
+          className='app_input'
+          placeholder='Blah blah blah'
+          value={detail}
+          onChange={(event) => setDetail(event.target.value)}
+          fieldClassName='edit_list__form_field'
+          labelClassName='edit_list__form_label'
+        />
+        <FormField
+          id={`${id}-done`}
+          label='Is Done'
+          type='checkbox'
+          checked={done}
+          onChange={(event) => setDone(event.target.checked)}
+          fieldClassName='edit_list__form_field'
+          labelClassName='edit_list__form_label'
+        />
+        <FormField
+          id={`${id}-limit`}
+          label='Deadline'
+          type='datetime-local'
+          className='app_input'
+          value={limit}
+          onChange={(event) => setLimit(event.target.value)}
+          fieldClassName='edit_list__form_field'
+          labelClassName='edit_list__form_label'
+        />
+        <FormActions
+          cancelLink='/'
+          cancelText='Cancel'
+          submitText='Update'
+          isSubmitting={isSubmitting}
+          deleteButton={deleteButton}
+          className='edit_list__form_actions'
+          spacerClassName='edit_list__form_actions_spacer'
+        />
       </form>
     </main>
   );

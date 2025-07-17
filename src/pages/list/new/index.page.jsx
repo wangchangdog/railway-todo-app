@@ -1,9 +1,13 @@
 import { BackButton } from '@/components/BackButton';
+import { ErrorMessage } from '@/components/ErrorMessage';
+import { FormActions } from '@/components/FormActions';
+import { FormField } from '@/components/FormField';
+import { PageTitle } from '@/components/PageTitle';
 import { useId } from '@/hooks/useId';
 import { createList, setCurrentList } from '@/store/list/index';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './index.css';
 
 const NewList = () => {
@@ -35,36 +39,33 @@ const NewList = () => {
           setIsSubmitting(false);
         });
     },
-    [title]
+    [title, dispatch, navigate]
   );
 
   return (
     <main className='new_list'>
       <BackButton />
-      <h2 className='new_list__title'>New List</h2>
-      <p className='new_list__error'>{errorMessage}</p>
+      <PageTitle className='new_list__title'>New List</PageTitle>
+      <ErrorMessage message={errorMessage} className='new_list__error' />
       <form className='new_list__form' onSubmit={onSubmit}>
-        <fieldset className='new_list__form_field'>
-          <label htmlFor={`${id}-title`} className='new_list__form_label'>
-            Name
-          </label>
-          <input
-            id={`${id}-title`}
-            className='app_input'
-            placeholder='Family'
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-          />
-        </fieldset>
-        <div className='new_list__form_actions'>
-          <Link to='/' data-variant='secondary' className='app_button'>
-            Cancel
-          </Link>
-          <div className='new_list__form_actions_spacer'></div>
-          <button type='submit' className='app_button' disabled={isSubmitting}>
-            Create
-          </button>
-        </div>
+        <FormField
+          id={`${id}-title`}
+          label='Name'
+          className='app_input'
+          placeholder='Family'
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+          fieldClassName='new_list__form_field'
+          labelClassName='new_list__form_label'
+        />
+        <FormActions
+          cancelLink='/'
+          cancelText='Cancel'
+          submitText='Create'
+          isSubmitting={isSubmitting}
+          className='new_list__form_actions'
+          spacerClassName='new_list__form_actions_spacer'
+        />
       </form>
     </main>
   );

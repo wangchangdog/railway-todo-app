@@ -1,8 +1,12 @@
+import { ErrorMessage } from '@/components/ErrorMessage';
+import { FormActions } from '@/components/FormActions';
+import { FormField } from '@/components/FormField';
+import { PageTitle } from '@/components/PageTitle';
 import { useId } from '@/hooks/useId';
 import { useSignup } from '@/hooks/useSignup';
 import { useCallback, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Link, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import './index.css';
 
 const SignUp = () => {
@@ -32,7 +36,7 @@ const SignUp = () => {
           setIsSubmitting(false);
         });
     },
-    [email, name, password]
+    [email, name, password, signup]
   );
 
   if (auth) {
@@ -41,58 +45,49 @@ const SignUp = () => {
 
   return (
     <main className='signup'>
-      <h2 className='signup__title'>Register</h2>
-      <p className='signup__error'>{errorMessage}</p>
+      <PageTitle className='signup__title'>Register</PageTitle>
+      <ErrorMessage message={errorMessage} className='signup__error' />
       <form className='signup__form' onSubmit={onSubmit}>
-        <fieldset className='signup__form_field'>
-          <label htmlFor={`${id}-email`} className='signup__form_label'>
-            E-mail Address
-          </label>
-          <input
-            id={`${id}-email`}
-            autoComplete='email'
-            className='app_input'
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-          />
-        </fieldset>
-        <fieldset className='signup__form_field'>
-          <label htmlFor={`${id}-name`} autoComplete='name' className='signup__form_label'>
-            Name
-          </label>
-          <input
-            id={`${id}-name`}
-            type='text'
-            className='app_input'
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-          />
-        </fieldset>
-        <fieldset className='signup__form_field'>
-          <label
-            htmlFor={`${id}-password`}
-            autoComplete='new-password'
-            className='signup__form_label'
-          >
-            Password
-          </label>
-          <input
-            id={`${id}-password`}
-            type='password'
-            className='app_input'
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </fieldset>
-        <div className='signup__form_actions'>
-          <Link className='app_button' data-variant='secondary' to='/signin'>
-            Login
-          </Link>
-          <div className='signup__form_actions_spacer'></div>
-          <button type='submit' className='app_button' disabled={isSubmitting}>
-            Register
-          </button>
-        </div>
+        <FormField
+          id={`${id}-email`}
+          label='E-mail Address'
+          autoComplete='email'
+          className='app_input'
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          fieldClassName='signup__form_field'
+          labelClassName='signup__form_label'
+        />
+        <FormField
+          id={`${id}-name`}
+          label='Name'
+          type='text'
+          autoComplete='name'
+          className='app_input'
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          fieldClassName='signup__form_field'
+          labelClassName='signup__form_label'
+        />
+        <FormField
+          id={`${id}-password`}
+          label='Password'
+          type='password'
+          autoComplete='new-password'
+          className='app_input'
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          fieldClassName='signup__form_field'
+          labelClassName='signup__form_label'
+        />
+        <FormActions
+          cancelLink='/signin'
+          cancelText='Login'
+          submitText='Register'
+          isSubmitting={isSubmitting}
+          className='signup__form_actions'
+          spacerClassName='signup__form_actions_spacer'
+        />
       </form>
     </main>
   );
