@@ -1,0 +1,11 @@
+.layout {
+  padding-left: 320px;
+  transition: padding-left 0.3s;
+}
+
+@media (max-width: 767px) {
+  .layout {
+    padding-left: 0;
+    padding-top: 60px; /* ハンバーガーメニューの高さに合わせて調整 */
+  }
+}

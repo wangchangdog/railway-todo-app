@@ -7,7 +7,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import './index.css';
 
-export const Sidebar = () => {
+import HamburgerMenu from '@/components/HamburgerMenu/HamburgerMenu';
+
+export const Sidebar = ({ isOpen, toggleSidebar }) => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
 
@@ -26,7 +28,7 @@ export const Sidebar = () => {
   }, [dispatch]);
 
   return (
-    <div className='sidebar'>
+    <div className={`sidebar ${isOpen ? 'open' : ''}`}>
       <Link to='/'>
         <h1 className='sidebar__title'>Todos</h1>
       </Link>

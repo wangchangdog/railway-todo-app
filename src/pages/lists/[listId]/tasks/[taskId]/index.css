@@ -5,6 +5,13 @@
 
   max-width: var(--width-edit-form);
   margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (max-width: 767px) {
+  .edit_task {
+    max-width: 100%;
+  }
 }
 
 .edit_task__error {

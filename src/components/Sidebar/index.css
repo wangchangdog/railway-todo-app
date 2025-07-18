@@ -8,8 +8,10 @@
   width: 320px;
   background-color: var(--slate-100);
   border-right: 1px solid var(--slate-200);
-  padding: 2.5rem 1.5rem;
+  padding: 3.5rem 1.5rem;
   overflow-y: auto;
+  transition: transform 0.3s;
+  z-index: 1000;
 }
 
 .sidebar__title {
@@ -125,4 +127,14 @@
 
 .sidebar__login {
   margin-top: 1.5rem;
+}
+
+@media (max-width: 767px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
 }

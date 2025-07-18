@@ -5,6 +5,13 @@
 
   max-width: var(--width-login-form);
   margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (max-width: 767px) {
+  .signin {
+    max-width: 100%;
+  }
 }
 
 .signin__error {

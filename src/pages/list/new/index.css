@@ -5,6 +5,13 @@
 
   max-width: var(--width-edit-form);
   margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (max-width: 767px) {
+  .new_list {
+    max-width: 100%;
+  }
 }
 
 .new_list__error {
