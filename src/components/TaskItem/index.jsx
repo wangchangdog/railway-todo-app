@@ -1,10 +1,11 @@
 import { CheckIcon } from '@/icons/CheckIcon';
 import { PencilIcon } from '@/icons/PencilIcon';
 import { updateTask } from '@/store/task';
+import { openModal } from '@/store/modalSlice';
 import { calculateTimeRemaining, formatDateTimeForDisplay } from '@/utils/dateUtils';
 import { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import './index.css';
 
 export const TaskItem = ({ task }) => {
@@ -21,6 +22,10 @@ export const TaskItem = ({ task }) => {
       setIsSubmitting(false);
     });
   }, [id, done, dispatch]);
+
+  const handleEdit = useCallback(() => {
+    dispatch(openModal({ type: 'task-edit', data: { listId, taskId: id } }));
+  }, [dispatch, listId, id]);
 
   const timeRemaining = calculateTimeRemaining(limit);
   const formattedLimit = formatDateTimeForDisplay(limit);
@@ -46,9 +51,9 @@ export const TaskItem = ({ task }) => {
           {title}
         </div>
         <div aria-hidden className='task_item__title_spacer'></div>
-        <Link to={`/lists/${listId}/tasks/${id}`} className='task_item__title_action'>
+        <button type='button' onClick={handleEdit} className='task_item__title_action'>
           <PencilIcon aria-label='Edit' />
-        </Link>
+        </button>
       </div>
       <div className='task_item__detail'>{detail}</div>
       {limit && (

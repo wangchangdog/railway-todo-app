@@ -2,12 +2,16 @@ import { format, differenceInMinutes, differenceInHours, differenceInDays, isPas
 
 export const formatDateTimeForInput = (dateString) => {
   if (!dateString) return '';
-  return format(new Date(dateString), "yyyy-MM-dd'T'HH:mm");
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return '';
+  return format(date, "yyyy-MM-dd'T'HH:mm");
 };
 
 export const formatDateTimeForDisplay = (dateString) => {
   if (!dateString) return '';
-  return format(new Date(dateString), 'yyyy/MM/dd HH:mm');
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) return '';
+  return format(date, 'yyyy/MM/dd HH:mm');
 };
 
 export const calculateTimeRemaining = (limitString) => {
@@ -54,7 +58,7 @@ export const isOverdue = (limitString) => {
 export const convertToServerFormat = (dateTimeLocalString) => {
   if (!dateTimeLocalString) return null;
   const date = new Date(dateTimeLocalString);
-  if (isNaN(date.getTime())) return '';
+  if (isNaN(date.getTime())) return null;
   // Convert to ISO 8601 UTC string (e.g., "2023-12-12T23:59:59.000Z")
   const isoString = date.toISOString();
   // Truncate milliseconds and ensure 'Z' suffix

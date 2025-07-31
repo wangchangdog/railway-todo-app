@@ -1,13 +1,13 @@
-import BackButton from '@/components/BackButton/index';
 import ErrorMessage from '@/components/ErrorMessage/index';
-import {FormActions} from '@/components/FormActions/index';
-import {FormField} from '@/components/FormField/index';
-import {PageTitle} from '@/components/PageTitle/index';
-import {useId} from '@/hooks/useId';
-import {deleteList, fetchLists, updateList} from '@/store/list';
-import {useCallback, useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {useNavigate, useParams} from 'react-router-dom';
+import { FormActions } from '@/components/FormActions/index';
+import { FormField } from '@/components/FormField/index';
+import Modal from '@/components/Modal/index';
+import { useId } from '@/hooks/useId';
+import { deleteList, fetchLists, updateList } from '@/store/list';
+import { closeModal } from '@/store/modalSlice';
+import { useCallback, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import './index.css';
 
 const EditList = () => {
@@ -43,6 +43,7 @@ const EditList = () => {
       void dispatch(updateList({ id: listId, title }))
         .unwrap()
         .then(() => {
+          dispatch(closeModal());
           navigate(`/lists/${listId}`);
         })
         .catch((err) => {
@@ -65,6 +66,7 @@ const EditList = () => {
     void dispatch(deleteList({ id: listId }))
       .unwrap()
       .then(() => {
+        dispatch(closeModal());
         navigate(`/`);
       })
       .catch((err) => {
@@ -86,33 +88,37 @@ const EditList = () => {
     </button>
   );
 
+  const handleCancel = useCallback(() => {
+    dispatch(closeModal());
+  }, [dispatch]);
+
   return (
-    <main className='edit_list'>
-      <BackButton />
-      <PageTitle className='edit_list__title'>Edit List</PageTitle>
-      <ErrorMessage message={errorMessage} className='edit_list__error' />
-      <form className='edit_list__form' onSubmit={onSubmit}>
-        <FormField
-          id={`${id}-title`}
-          label='Name'
-          className='app_input'
-          placeholder='Family'
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          fieldClassName='edit_list__form_field'
-          labelClassName='edit_list__form_label'
-        />
-        <FormActions
-          cancelLink='/'
-          cancelText='Cancel'
-          submitText='Update'
-          isSubmitting={isSubmitting}
-          deleteButton={deleteButton}
-          className='edit_list__form_actions'
-          spacerClassName='edit_list__form_actions_spacer'
-        />
-      </form>
-    </main>
+    <Modal title='Edit List' onClose={handleCancel}>
+      <main className='edit_list'>
+        <ErrorMessage message={errorMessage} className='edit_list__error' />
+        <form className='edit_list__form' onSubmit={onSubmit}>
+          <FormField
+            id={`${id}-title`}
+            label='Name'
+            className='app_input'
+            placeholder='Family'
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            fieldClassName='edit_list__form_field'
+            labelClassName='edit_list__form_label'
+          />
+          <FormActions
+            onCancel={handleCancel}
+            cancelText='Cancel'
+            submitText='Update'
+            isSubmitting={isSubmitting}
+            deleteButton={deleteButton}
+            className='edit_list__form_actions'
+            spacerClassName='edit_list__form_actions_spacer'
+          />
+        </form>
+      </main>
+    </Modal>
   );
 };
 

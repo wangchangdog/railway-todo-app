@@ -50,7 +50,7 @@ export default [
         'warn',
         { allowConstantExport: true },
       ],
-      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^React$' }],
       'react-hooks/exhaustive-deps': 'warn',
     },
     settings: {

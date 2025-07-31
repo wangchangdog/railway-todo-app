@@ -24,7 +24,7 @@ axios.interceptors.response.use(
       store.dispatch(setToken(null));
       store.dispatch(setUser(null));
     }
-    
+
     return Promise.reject(err);
   }
 );

@@ -31,4 +31,4 @@ limit のフォーマット「YYYY-MM-DDTHH:MM:SSZ」に気をつけてくださ
 
 
 - 以下のSwaggerHubのURLを参照して、APIの仕様を確認してください。
-https://app.swaggerhub.com/apis-docs/INFO_3/TODOApplication/1.0.0#/task/post_lists__listId__tasks
+https://app.swaggerhub.com/apis-docs/INFO_3/TODOApplication/1.0.0#/
