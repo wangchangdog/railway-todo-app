@@ -3,6 +3,13 @@
   flex-direction: column;
   max-width: var(--width-main-content);
   margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (max-width: 767px) {
+  .tasks_list {
+    max-width: 100%;
+  }
 }
 
 .tasks_list__title {
